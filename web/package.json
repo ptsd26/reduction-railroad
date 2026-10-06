@@ -8,8 +8,8 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch"
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^8.0.0",
@@ -23,7 +23,7 @@
 		"vite": "^8.3.0"
 	},
 	"imports": {
-		"#lib": "./src/lib/index.js",
+		"#lib": "./src/lib/index.ts",
 		"#lib/*": "./src/lib/*"
 	},
 	"dependencies": {
