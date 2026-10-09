@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies = []
+dependencies = [
+    "psycopg[binary]>=3.2.13",
+]
 
 [project.scripts]
 judge = "judge:main"
