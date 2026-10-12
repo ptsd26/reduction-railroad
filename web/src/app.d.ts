@@ -1,8 +1,11 @@
+import type { Session } from '@auth/core/types';
+
 declare global {
-	namespace App {
-		// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-		interface Locals {}
-	}
+  namespace App {
+    interface Locals {
+      auth: () => Promise<Session | null>;
+    }
+  }
 }
 
 export {};
