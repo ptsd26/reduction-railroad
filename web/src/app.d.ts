@@ -1,8 +1,7 @@
-import type { User, Session } from 'better-auth';
-
 declare global {
 	namespace App {
-		interface Locals { user?: User; session?: Session }
+		// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+		interface Locals {}
 	}
 }
 
