@@ -51,6 +51,7 @@
 		"@xyflow/svelte": "^1.7.0",
 		"codemirror": "^6.0.2",
 		"drizzle-orm": "^0.45.2",
-		"postgres": "^3.4.9"
+		"postgres": "^3.4.9",
+		"smol-toml": "^1.9.1"
 	}
 }
