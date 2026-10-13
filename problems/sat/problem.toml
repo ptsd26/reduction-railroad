@@ -1,0 +1,18 @@
+# Generic problem metadata
+[meta]
+abbreviation = "SAT"
+name = "Boolean satisfiability"
+complexity = "NP-complete"
+is_root = true
+
+# Limit keys shared across all problems, based on the solution run.
+# These are upper bounds for a passing solution.
+[limits.run]
+time_ms = 2000
+
+# Limit keys specific to the problem, based on generated oracle queries.
+# This is an upper bound for what we can safely give to the solver;
+# no larger instance should be required for a reduction from ANY problem.
+[limits.query]
+vars = 100_000
+clauses = 100_000
