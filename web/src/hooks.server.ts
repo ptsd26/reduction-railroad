@@ -5,11 +5,10 @@ import { getAuthConfig } from './lib/server/auth';
 
 
 export const handle: Handle = async ({ event, resolve }) => {
-  const config = getAuthConfig();
   const pathname = event.url.pathname;
 
   if (pathname.startsWith('/auth/')) {
-    return Auth(event.request, config);
+    return Auth(event.request, getAuthconfig());
   }
 
   let sessionPromise: Promise<Session | null> | undefined;
@@ -29,7 +28,7 @@ export const handle: Handle = async ({ event, resolve }) => {
           cookie: event.request.headers.get('cookie') ?? ''
         }
       }),
-      config
+      getAuthConfig()
     );
 
     sessionCookies.push(...response.headers.getSetCookie());
