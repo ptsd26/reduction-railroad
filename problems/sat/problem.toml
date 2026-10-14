@@ -16,3 +16,4 @@ time_ms = 2000
 [limits.query]
 vars = 100_000
 clauses = 100_000
+sum_vars_in_clauses = 200_000  # total number of variables in all clauses
