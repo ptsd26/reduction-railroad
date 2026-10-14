@@ -3,11 +3,11 @@ name = "judge"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.14"
 dependencies = [
     "docker>=7.2.0",
     "psycopg[binary]>=3.2.13",
-    "pysat>=3.2.2",
+    "python-sat>=1.9.dev15",
 ]
 
 [project.scripts]
