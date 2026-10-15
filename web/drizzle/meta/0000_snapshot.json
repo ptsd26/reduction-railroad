@@ -1,5 +1,5 @@
 {
-  "id": "768ef33c-213e-4c1f-8810-a87b618157fb",
+  "id": "b37619b8-a020-4a18-9bb0-8c8d943f9556",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -50,6 +50,18 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'queued'"
+        },
+        "current_case": {
+          "name": "current_case",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "total_cases": {
+          "name": "total_cases",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         },
         "verdict": {
           "name": "verdict",
