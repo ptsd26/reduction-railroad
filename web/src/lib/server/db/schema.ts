@@ -114,6 +114,8 @@ export const judgeRuns = pgTable(
 		testDataVersion: text('test_data_version').notNull(), // `${from.data_hash}:${to.data_hash}`
 		createdAt: timestamptz('created_at').notNull().defaultNow(),
 		status: judgeRunStatus('status').notNull().default('queued'),
+		currentCase: integer('current_case'), // case currently being tested
+		totalCases: integer('total_cases'), // total number of cases the run is being tested on
 		verdict: verdict('verdict'),
 		verdictMeta: jsonb('verdict_meta'),
 		metricMaxOutputSize: integer('metric_max_output_size'),
