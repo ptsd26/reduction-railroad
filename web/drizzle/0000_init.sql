@@ -6,6 +6,8 @@ CREATE TABLE "judge_runs" (
 	"test_data_version" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"status" "judge_run_status" DEFAULT 'queued' NOT NULL,
+	"current_case" integer,
+	"total_cases" integer,
 	"verdict" "verdict",
 	"verdict_meta" jsonb,
 	"metric_max_output_size" integer,
