@@ -15,7 +15,8 @@
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
-		"db:studio": "drizzle-kit studio"
+		"db:studio": "drizzle-kit studio",
+		"db:pymodels": "set -a && . ./.env && set +a && ../judge/scripts/gen_models.sh"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
@@ -51,6 +52,7 @@
 		"@xyflow/svelte": "^1.7.0",
 		"codemirror": "^6.0.2",
 		"drizzle-orm": "^0.45.2",
-		"postgres": "^3.4.9"
+		"postgres": "^3.4.9",
+		"smol-toml": "^1.9.1"
 	}
 }
