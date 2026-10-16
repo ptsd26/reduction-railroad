@@ -8,7 +8,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   const pathname = event.url.pathname;
 
   if (pathname.startsWith('/auth/')) {
-    return Auth(event.request, getAuthconfig());
+    return Auth(event.request, getAuthConfig());
   }
 
   let sessionPromise: Promise<Session | null> | undefined;
