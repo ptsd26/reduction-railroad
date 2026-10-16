@@ -6,7 +6,10 @@ import {
   AUTH_SECRET
 } from '$app/env/private';
 
+let config: AuthConfig | undefined;
+
 export function getAuthConfig(): AuthConfig {
+    if(config) return config;
     const clientId = GITHUB_CLIENT_ID;
     const clientSecret = GITHUB_CLIENT_SECRET;
     const secret = AUTH_SECRET;
@@ -15,7 +18,7 @@ export function getAuthConfig(): AuthConfig {
         throw new Error('Missing env variable for auth config');
     }
 
-    return {
+    config = {
         basePath: '/auth',
         secret,
         trustHost: true,
@@ -50,4 +53,6 @@ export function getAuthConfig(): AuthConfig {
             }
         }
     };
+  
+    return config;
 }
