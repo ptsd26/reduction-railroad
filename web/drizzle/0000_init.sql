@@ -26,6 +26,8 @@ CREATE TABLE "problems" (
 	"statement" text NOT NULL,
 	"examples" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"is_root" boolean DEFAULT false NOT NULL,
+	"reduction_time_limit_ms" integer DEFAULT 1000 NOT NULL,
+	"reduction_memory_limit_mb" integer DEFAULT 256 NOT NULL,
 	"content_hash" text NOT NULL,
 	"data_hash" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,

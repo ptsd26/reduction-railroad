@@ -1,5 +1,5 @@
 {
-  "id": "b37619b8-a020-4a18-9bb0-8c8d943f9556",
+  "id": "902bc9e1-3263-406e-bbda-c1373f6b669a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -220,6 +220,20 @@
           "primaryKey": false,
           "notNull": true,
           "default": false
+        },
+        "reduction_time_limit_ms": {
+          "name": "reduction_time_limit_ms",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1000
+        },
+        "reduction_memory_limit_mb": {
+          "name": "reduction_memory_limit_mb",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 256
         },
         "content_hash": {
           "name": "content_hash",
