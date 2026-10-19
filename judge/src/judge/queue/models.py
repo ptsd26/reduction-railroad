@@ -59,6 +59,8 @@ class Problems(Base):
     statement: Mapped[str] = mapped_column(Text, nullable=False)
     examples: Mapped[object] = mapped_column(JSONB, nullable=False, server_default=text("'[]'::jsonb"))
     is_root: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text('false'))
+    reduction_time_limit_ms: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text('1000'))
+    reduction_memory_limit_mb: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text('256'))
     content_hash: Mapped[str] = mapped_column(Text, nullable=False)
     data_hash: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime(True), nullable=False, server_default=text('now()'))
