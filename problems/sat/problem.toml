@@ -5,15 +5,16 @@ name = "Boolean satisfiability"
 complexity = "NP-complete"
 is_root = true
 
-# Limit keys shared across all problems, based on the solution run.
+# Limit keys shared across all problems, evaluated on the solution run.
 # These are upper bounds for a passing solution.
 [limits.run]
-time_ms = 2000
+time_ms = 1000
+memory_mb = 256
 
-# Limit keys specific to the problem, based on generated oracle queries.
-# This is an upper bound for what we can safely give to the solver;
-# no larger instance should be required for a reduction from ANY problem.
-[limits.query]
-vars = 100_000
-clauses = 100_000
-sum_vars_in_clauses = 200_000  # total number of variables in all clauses
+# Size limits specific to the problem.
+# Each key has an `input` bound (max for instances in test data) and
+# a `query` bound (max that can be given to the oracle by a reduction).
+[limits.size]
+vars = { input = 1_000, query = 100_000 }
+clauses = { input = 4_000, query = 100_000 }
+sum_vars_in_clauses = { input = 8_000, query = 200_000 }  # total number of vars in all clauses

@@ -29,3 +29,13 @@ export const Verdict = {
     FAILED: 'failed', // judging failed multiple times; something's wrong!
 } as const;
 export type Verdict = (typeof Verdict)[keyof typeof Verdict]
+
+/**
+ * Describes a sample case with input/output and optional explanation Markdown.
+ */
+export type Example = {
+    name: string;
+    input: string;
+    output: string;
+    explanation: string | null;
+};

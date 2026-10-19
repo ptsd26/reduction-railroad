@@ -1,19 +1,19 @@
-import { JudgeRunStatus, Verdict } from '#lib/types.ts';
+import { JudgeRunStatus, Verdict, type Example } from '#lib/types.ts';
 import { eq, sql } from 'drizzle-orm';
 import {
+	bigint,
+	boolean,
+	check,
+	index,
+	integer,
+	jsonb,
 	pgEnum,
 	pgTable,
-	uuid,
-	bigint,
+	pgView,
 	text,
-	integer,
-	boolean,
-	jsonb,
 	timestamp,
-	index,
 	uniqueIndex,
-	check,
-	pgView
+	uuid
 } from 'drizzle-orm/pg-core';
 
 /**
@@ -54,8 +54,12 @@ export const problems = pgTable(
 		name: text('name').notNull(),
 		complexity: text('complexity').notNull(),
 		statement: text('statement').notNull(),
-		examples: jsonb('examples').notNull().default([]),
+		examples: jsonb('examples').$type<Example[]>().notNull().default([]),
 		isRoot: boolean('is_root').notNull().default(false),
+
+		reductionTimeLimitMs: integer('reduction_time_limit_ms').notNull().default(1000),
+		reductionMemoryLimitMb: integer('reduction_memory_limit_mb').notNull().default(256),
+
 		contentHash: text('content_hash').notNull(), // full problem directory hash
 		dataHash: text('data_hash').notNull(), // only judge data that could impact a verdict
 		createdAt: timestamptz('created_at').notNull().defaultNow(),
