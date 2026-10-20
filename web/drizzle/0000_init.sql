@@ -8,14 +8,14 @@ CREATE TABLE "judge_runs" (
 	"status" "judge_run_status" DEFAULT 'queued' NOT NULL,
 	"current_case" integer,
 	"total_cases" integer,
-	"verdict" "verdict",
-	"verdict_meta" jsonb,
-	"metric_max_output_size" integer,
-	"metric_max_runtime_ms" integer,
 	"judge_attempts" integer DEFAULT 0 NOT NULL,
 	"judge_worker_id" text,
 	"judge_lease_expires_at" timestamp with time zone,
-	"completed_at" timestamp with time zone
+	"completed_at" timestamp with time zone,
+	"verdict" "verdict",
+	"verdict_meta" jsonb,
+	"metric_max_output_size" integer,
+	"metric_max_runtime_ms" integer
 );
 --> statement-breakpoint
 CREATE TABLE "problems" (
@@ -26,8 +26,9 @@ CREATE TABLE "problems" (
 	"statement" text NOT NULL,
 	"examples" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"is_root" boolean DEFAULT false NOT NULL,
-	"reduction_time_limit_ms" integer DEFAULT 1000 NOT NULL,
-	"reduction_memory_limit_mb" integer DEFAULT 256 NOT NULL,
+	"time_limit_ms" integer DEFAULT 1000 NOT NULL,
+	"memory_limit_mb" integer DEFAULT 256 NOT NULL,
+	"size_limits" jsonb NOT NULL,
 	"content_hash" text NOT NULL,
 	"data_hash" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,

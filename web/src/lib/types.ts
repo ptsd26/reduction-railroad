@@ -39,3 +39,11 @@ export type Example = {
     output: string;
     explanation: string | null;
 };
+
+/**
+ * Describes problem-specific size limits (e.g. `vars`, `clauses`, `sum_vars_in_clauses` for SAT).
+ *
+ * input: max size of an instance in the test data for a reduction from this problem
+ * query: max size of an instance a reduction may give to this problem's oracle
+ */
+export type SizeLimits = Record<string, { input: number; query: number }>;

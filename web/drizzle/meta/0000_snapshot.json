@@ -1,5 +1,5 @@
 {
-  "id": "902bc9e1-3263-406e-bbda-c1373f6b669a",
+  "id": "fc7b60f9-746f-4255-929d-a7b004d0cf60",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -63,30 +63,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "verdict": {
-          "name": "verdict",
-          "type": "verdict",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "verdict_meta": {
-          "name": "verdict_meta",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "metric_max_output_size": {
-          "name": "metric_max_output_size",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "metric_max_runtime_ms": {
-          "name": "metric_max_runtime_ms",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "judge_attempts": {
           "name": "judge_attempts",
           "type": "integer",
@@ -109,6 +85,30 @@
         "completed_at": {
           "name": "completed_at",
           "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verdict": {
+          "name": "verdict",
+          "type": "verdict",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verdict_meta": {
+          "name": "verdict_meta",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metric_max_output_size": {
+          "name": "metric_max_output_size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metric_max_runtime_ms": {
+          "name": "metric_max_runtime_ms",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         }
@@ -221,19 +221,25 @@
           "notNull": true,
           "default": false
         },
-        "reduction_time_limit_ms": {
-          "name": "reduction_time_limit_ms",
+        "time_limit_ms": {
+          "name": "time_limit_ms",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 1000
         },
-        "reduction_memory_limit_mb": {
-          "name": "reduction_memory_limit_mb",
+        "memory_limit_mb": {
+          "name": "memory_limit_mb",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 256
+        },
+        "size_limits": {
+          "name": "size_limits",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
         },
         "content_hash": {
           "name": "content_hash",

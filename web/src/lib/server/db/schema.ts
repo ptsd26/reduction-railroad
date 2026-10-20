@@ -1,4 +1,4 @@
-import { JudgeRunStatus, Verdict, type Example } from '#lib/types.ts';
+import { JudgeRunStatus, SizeLimits, Verdict, type Example } from '#lib/types.ts';
 import { eq, sql } from 'drizzle-orm';
 import {
 	bigint,
@@ -49,6 +49,7 @@ export const users = pgTable('users', {
 export const problems = pgTable(
 	'problems',
 	{
+		// Identifying information
 		slug: text('slug').primaryKey(),
 		abbreviation: text('abbreviation').notNull(),
 		name: text('name').notNull(),
@@ -57,13 +58,16 @@ export const problems = pgTable(
 		examples: jsonb('examples').$type<Example[]>().notNull().default([]),
 		isRoot: boolean('is_root').notNull().default(false),
 
-		reductionTimeLimitMs: integer('reduction_time_limit_ms').notNull().default(1000),
-		reductionMemoryLimitMb: integer('reduction_memory_limit_mb').notNull().default(256),
+		// Run and problem bounds
+		timeLimitMs: integer('time_limit_ms').notNull().default(1000),
+		memoryLimitMb: integer('memory_limit_mb').notNull().default(256),
+		sizeLimits: jsonb('size_limits').$type<SizeLimits>().notNull(), // problem-specific size limits for input and query instances
 
+		// Hashes and timestamps for detecting changes to the problem directory and judge data
 		contentHash: text('content_hash').notNull(), // full problem directory hash
 		dataHash: text('data_hash').notNull(), // only judge data that could impact a verdict
 		createdAt: timestamptz('created_at').notNull().defaultNow(),
-		updatedAt: timestamptz('updated_at').notNull().defaultNow(), // set by the loader when content_hash changes
+		updatedAt: timestamptz('updated_at').notNull().defaultNow(), // set by the loader script when content_hash changes
 	},
 	(t) => [
 		// Require a unique problem graph root
@@ -109,6 +113,7 @@ export const submissions = pgTable(
 export const judgeRuns = pgTable(
 	'judge_runs',
 	{
+		// Identifying information
 		id: bigint('id', { mode: 'bigint' })
 			.primaryKey()
 			.generatedAlwaysAsIdentity(), // sequential ID incrementing with each row
@@ -117,17 +122,21 @@ export const judgeRuns = pgTable(
 			.references(() => submissions.id, { onDelete: 'cascade' }),
 		testDataVersion: text('test_data_version').notNull(), // `${from.data_hash}:${to.data_hash}`
 		createdAt: timestamptz('created_at').notNull().defaultNow(),
+
+		// Judge run state
 		status: judgeRunStatus('status').notNull().default('queued'),
 		currentCase: integer('current_case'), // case currently being tested
 		totalCases: integer('total_cases'), // total number of cases the run is being tested on
-		verdict: verdict('verdict'),
-		verdictMeta: jsonb('verdict_meta'),
-		metricMaxOutputSize: integer('metric_max_output_size'),
-		metricMaxRuntimeMs: integer('metric_max_runtime_ms'),
 		judgeAttempts: integer('judge_attempts').notNull().default(0), // number of times this run has failed
 		judgeWorkerId: text('judge_worker_id'),
 		judgeLeaseExpiresAt: timestamptz('judge_lease_expires_at'),
 		completedAt: timestamptz('completed_at'),
+
+		// Verdict and metrics (may be null if the run is not yet complete)
+		verdict: verdict('verdict'),
+		verdictMeta: jsonb('verdict_meta'),
+		metricMaxOutputSize: integer('metric_max_output_size'),
+		metricMaxRuntimeMs: integer('metric_max_runtime_ms'),
 	},
 	(t) => [
 		// Allow indexing by latest run on a given submission (for submission verdict)
@@ -147,6 +156,14 @@ export const runMetrics = {
 	maxRuntimeMs: judgeRuns.metricMaxRuntimeMs,
 	codeNbytes: submissions.codeNbytes,
 }
+
+/**
+ * Shorthand for querying judge run limits
+ */
+export const runLimits = {
+	timeMs: problems.timeLimitMs,
+	memoryMb: problems.memoryLimitMb,
+};
 
 /**
  * Prebuilt view for querying judge run results with verdict and metrics
