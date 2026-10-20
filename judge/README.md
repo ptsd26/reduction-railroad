@@ -8,6 +8,7 @@ The `scripts` directory is not part of the main judge worker; it contains toolin
 cd web && npm run db:start  # if Postgres DB not already running
 
 # In a separate terminal session
+cd web
 npm run db:migrate
 npm run db:pymodels
 ```
