@@ -1,4 +1,4 @@
-import { JudgeRunStatus, SizeLimits, Verdict, type Example } from '#lib/types.ts';
+import { JudgeRunStatus, Verdict, type Example, type SizeLimits } from '#lib/types.ts';
 import { eq, sql } from 'drizzle-orm';
 import {
 	bigint,
