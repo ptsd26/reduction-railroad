@@ -1,0 +1,12 @@
+
+services:
+  judge:
+    build: .
+    ports:
+      - "8000:8000"
+    privileged: true
+    restart: unless-stopped
+    init: true
+    mem_limit: 1g
+    cpus: 2.0
+    pids_limit: 256
