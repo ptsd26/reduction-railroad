@@ -16,7 +16,8 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
-		"db:pymodels": "set -a && . ./.env && set +a && ../judge/scripts/gen_models.sh"
+		"db:pymodels": "set -a && . ./.env && set +a && ../judge/scripts/gen_models.sh",
+		"db:load-problems": "set -a && . ./.env && set +a && cd ../judge && uv run python scripts/load_problems.py"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
