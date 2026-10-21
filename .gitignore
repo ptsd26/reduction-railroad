@@ -1,1 +1,13 @@
 .vscode/
+
+# OS
+**/.DS_Store
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Python
+**/*.pyc

@@ -15,7 +15,9 @@
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
-		"db:studio": "drizzle-kit studio"
+		"db:studio": "drizzle-kit studio",
+		"db:pymodels": "set -a && . ./.env && set +a && ../judge/scripts/gen_models.sh",
+		"db:load-problems": "set -a && . ./.env && set +a && cd ../judge && uv run python scripts/load_problems.py"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
@@ -25,7 +27,7 @@
 		"@sveltejs/kit": "^3.0.0",
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
 		"@tailwindcss/vite": "^4.3.3",
-		"@types/node": "^24",
+		"@types/node": "^24.19.2",
 		"cn": "^0.4.0",
 		"drizzle-kit": "^0.31.10",
 		"eslint": "^10.4.1",
