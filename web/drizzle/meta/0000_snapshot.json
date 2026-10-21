@@ -1,5 +1,5 @@
 {
-  "id": "fc7b60f9-746f-4255-929d-a7b004d0cf60",
+  "id": "e96f6c36-cd01-4ae2-b582-688d8648d474",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -225,15 +225,13 @@
           "name": "time_limit_ms",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "default": 1000
+          "notNull": true
         },
         "memory_limit_mb": {
           "name": "memory_limit_mb",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "default": 256
+          "notNull": true
         },
         "size_limits": {
           "name": "size_limits",

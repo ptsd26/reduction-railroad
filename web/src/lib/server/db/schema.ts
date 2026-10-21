@@ -59,8 +59,8 @@ export const problems = pgTable(
 		isRoot: boolean('is_root').notNull().default(false),
 
 		// Run and problem bounds
-		timeLimitMs: integer('time_limit_ms').notNull().default(1000),
-		memoryLimitMb: integer('memory_limit_mb').notNull().default(256),
+		timeLimitMs: integer('time_limit_ms').notNull(),
+		memoryLimitMb: integer('memory_limit_mb').notNull(),
 		sizeLimits: jsonb('size_limits').$type<SizeLimits>().notNull(), // problem-specific size limits for input and query instances
 
 		// Hashes and timestamps for detecting changes to the problem directory and judge data
