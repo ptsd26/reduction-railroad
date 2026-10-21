@@ -1,0 +1,112 @@
+name: Check and build
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      # Check out the repository and set up Node v24
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      # We don't read env variables for checks but do need them to exist
+      - run: cp .env.example .env
+
+      # Install the web project; make sure check, lint and build report no errors
+      - run: npm ci
+      - run: npm run check
+      - run: npm run lint
+      - run: npm run build
+
+      # If the schema was changed, the migrations in version control must be up to date
+      - name: Check generated migrations against schema
+        run: |
+          npm run db:generate
+          if [ -n "$(git status --porcelain -- drizzle)" ]; then
+            echo "::error::Migrations are not up to date with schema.ts. Run 'npm run db:generate' from 'web/' and commit the migrations in 'web/drizzle/'."
+            git status --porcelain -- drizzle
+            exit 1
+          fi
+
+  judge:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: judge
+    steps:
+      # Check out the repository and install uv
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.0
+        with:
+          working-directory: judge
+          enable-cache: true
+
+      # Check that the lockfile is up to date
+      - run: uv sync --locked
+
+      # Make sure the judge module imports cleanly
+      - run: uv run python -c "import judge, judge.queue.models"
+
+  models:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: mysecretpassword
+          POSTGRES_DB: local
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 5432:5432
+    steps:
+      # Checkout the repository and install Node v24 + uv
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - uses: astral-sh/setup-uv@v10.3.0
+        with:
+          working-directory: judge
+          enable-cache: true
+
+      # Create a .env file with example values so we can run the local DB
+      - run: cp .env.example .env
+        working-directory: web
+
+      # Install dependencies
+      - run: npm ci
+        working-directory: web
+
+      # Apply Drizzle's generated migrations to the running DB service
+      - run: npm run db:migrate
+        working-directory: web
+
+      # Generate Python models from the migrated DB
+      - run: npm run db:pymodels
+        working-directory: web
+
+      # Make sure the generated pymodels are exactly what is currently versioned
+      - name: Check Python sqlalchemy models against migrated DB
+        run: |
+          if ! git diff --exit-code -- judge/src/judge/queue/models.py; then
+            echo "::error::Generated Python DB models are not up to date. Run 'npm run db:pymodels' and commit the new 'judge/src/judge/queue/models.py'."
+            exit 1
+          fi
