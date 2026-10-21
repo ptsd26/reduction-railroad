@@ -36,9 +36,10 @@ For the GitHub `.env` values, [create an OAuth app](https://docs.github.com/en/a
 From `web/`:
 
 ```sh
-npm run db:start    # Runs the Postgres container in the foreground (needs its own terminal)
-npm run db:migrate  # Create/update tables; re-run after schema is changed
-npm run dev         # http://localhost:5173
+npm run db:start            # Runs the Postgres container in the foreground (needs its own terminal)
+npm run db:migrate          # Create/update tables; re-run after schema is changed
+npm run db:load-problems    # Load problem metadata into the DB instance
+npm run dev                 # http://localhost:5173
 ```
 
 ## Updating the database schema
@@ -46,9 +47,9 @@ npm run dev         # http://localhost:5173
 The database schema is defined in `web/src/lib/server/db/schema.ts`. After it's edited, you need to regenerate the database migrations (Drizzle generates a bunch of SQL for this) and then perform the actual migration on your local database instance.
 
 ```sh
-npm run db:generate   # Generate database migrations
-npm run db:migrate    # Apply migrations to local Postgres instance (must have run db:start)
-npm run db:pymodels   # Regenerate Python models for sqlalchemy (judge/src/judge/queue/models.py)
+npm run db:generate         # Generate database migrations
+npm run db:migrate          # Apply migrations to local Postgres instance (must have run db:start)
+npm run db:pymodels         # Regenerate Python models for sqlalchemy (judge/src/judge/queue/models.py)
 ```
 
 The updated schema, the newly generated files in `web/drizzle`, and the updated Python models should all be committed together.
