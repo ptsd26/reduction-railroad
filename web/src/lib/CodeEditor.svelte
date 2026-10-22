@@ -5,9 +5,14 @@
 
 	/** @type {HTMLDivElement} */
 	let container;
+	let editor;
+
+	export function getCode() {
+		return editor.state.doc.toString();
+	}
 
 	onMount(() => {
-		const editor = new EditorView({
+		editor = new EditorView({
 			parent: container,
 			doc: '#include <iostream>\n\nint main() {\n    std::cout << "Hello, Railroad!\\n";\n    return 0;\n}\n',
 			extensions: [
