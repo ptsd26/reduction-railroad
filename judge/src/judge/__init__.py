@@ -8,9 +8,6 @@ from sqlalchemy.orm import Session
 
 from judge.queue.models import JudgeRunStatus, JudgeRuns, Verdict
 
-# SQLAlchemy needs the driver in the URL scheme
-engine = create_engine("postgresql+psycopg://" + os.environ["DATABASE_URL"].split("://", 1)[1])
-
 # Max number of attempts to judge a solution before it counts as failed
 MAX_ATTEMPTS = 3
 
@@ -35,6 +32,9 @@ def judge(source: str, run_id: int) -> tuple[Verdict, dict]:
 
 
 def main() -> None:
+    # SQLAlchemy needs the driver in the URL scheme
+    engine = create_engine("postgresql+psycopg://" + os.environ["DATABASE_URL"].split("://", 1)[1])
+
     while True:
         # Claim the oldest queued run, skipping any another worker is claiming right now
         with Session(engine) as session, session.begin():
