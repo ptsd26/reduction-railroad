@@ -21,7 +21,7 @@ jobs:
           cache-dependency-path: web/package-lock.json
 
       # We don't read env variables for checks but do need them to exist
-      - run: cp .env.example .env
+      - run: cp ../.env.example ../.env
 
       # Install the web project; make sure check, lint and build report no errors
       - run: npm ci
@@ -88,7 +88,7 @@ jobs:
           enable-cache: true
 
       # Create a .env file with example values so we can run the local DB
-      - run: cp .env.example .env
+      - run: cp ../.env.example ../.env
         working-directory: web
 
       # Install dependencies

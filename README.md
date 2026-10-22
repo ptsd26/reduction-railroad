@@ -20,9 +20,10 @@ Currently Docker compose is used within the web directory, but we'll eventually 
 ### Setup
 
 ```sh
-cd web
 cp .env.example .env
 # Fill in AUTH_SECRET and the GitHub OAuth values in .env (see comments in the file)
+
+cd web
 npm ci
 
 cd ../judge
