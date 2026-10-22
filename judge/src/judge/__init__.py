@@ -1,12 +1,16 @@
 import os
 import time
 import traceback
+import socket
 
 from judge.runner import run_cpp
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import Session
 
 from judge.queue.models import JudgeRunStatus, JudgeRuns, Verdict
+
+# Id of this judge worker box
+WORKER_ID = socket.gethostname()
 
 # Max number of attempts to judge a solution before it counts as failed
 MAX_ATTEMPTS = 3
@@ -51,6 +55,10 @@ def main() -> None:
             else:
                 # Claim the run
                 run.status = JudgeRunStatus.RUNNING
+                run.current_case = 1
+                run.total_cases = 1
+                run.judge_worker_id = WORKER_ID
+
                 run_id = run.id
                 source = run.submission.source
 
