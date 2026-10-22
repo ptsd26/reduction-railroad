@@ -2,7 +2,6 @@
   import type { Session } from "@auth/core/types";
   import { refreshAll } from "$app/navigation";
   import LogOutIcon from "@lucide/svelte/icons/log-out";
-  import * as Avatar from "#lib/components/ui/avatar/index.ts";
   import * as DropdownMenu from "#lib/components/ui/dropdown-menu/index.ts";
   import { Button } from "#lib/components/ui/button/index.ts";
 
@@ -40,15 +39,13 @@
 {#if user}
   <DropdownMenu.Root>
     <DropdownMenu.Trigger class="rounded-full cursor-pointer">
-      <Avatar.Root class="size-12">
-        <Avatar.Image src={user.image} alt={user.name} />
-        <Avatar.Fallback>{user.name?.[0]?.toUpperCase()}</Avatar.Fallback>
-      </Avatar.Root>
+      <img src={user.image} alt={user.name} class="size-12 rounded-full" />
     </DropdownMenu.Trigger>
 
     <DropdownMenu.Content align="end" class="min-w-48">
       <DropdownMenu.Label>Signed in as <b>{user.name}</b></DropdownMenu.Label>
       <DropdownMenu.Separator />
+
       <DropdownMenu.Item onSelect={signOut}>
         <LogOutIcon />
         Sign out
