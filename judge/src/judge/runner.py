@@ -30,14 +30,14 @@ def _command(
     )
 
 
-def run_cpp(source: string) -> RunResult:
+def run_cpp(source: str) -> RunResult:
     """Compile and execute a C++ source file inside an Isolate sandbox."""
 
     if not source:
         raise ValueError("C++ source is required")
     if len(source) > MAX_SOURCE_BYTES:
         raise ValueError("Source too large")
-    
+
     box_id = uuid.uuid4().int % 1_000
     initialized = False
 
@@ -47,17 +47,11 @@ def run_cpp(source: string) -> RunResult:
             timeout=5,
         )
         if init.returncode != 0:
-            return RunResult(
-                stdout="",
-                stderr=init.stderr.decode("utf-8", errors="replace"),
-                compile_stdout="",
-                compile_stderr="Could not initialize Isolate",
-                exit_code=None,
-            )
+            raise RuntimeError("Failed to initialize isolate: " + init.stderr.decode(errors="replace"))
 
         initialized = True
         box = BOX_ROOT / str(box_id) / "box"
-        (box / "main.cpp").write_bytes(source)
+        (box / "main.cpp").write_text(source)
 
         try:
             compiled = _command(
@@ -89,7 +83,7 @@ def run_cpp(source: string) -> RunResult:
 
             return RunResult(
                 "", "", compile_stdout, compile_stderr,
-                compiled.returncode,
+                None,
             )
 
         try:
@@ -134,55 +128,3 @@ def run_cpp(source: string) -> RunResult:
                 )
             except (subprocess.TimeoutExpired, OSError):
                 pass
-
-
-import os
-import time
-
-from sqlalchemy import create_engine, func, select
-from sqlalchemy.orm import Session
-
-from judge.queue.models import JudgeRunStatus, JudgeRuns, Verdict
-
-# SQLAlchemy needs the driver in the URL scheme
-engine = create_engine("postgresql+psycopg://" + os.environ["DATABASE_URL"].split("://", 1)[1])
-
-
-def judge(source: str, run_id: int) -> (Verdict, str):
-    result = run_cpp(source)
-    if result.exit_code == 0: return (Verdict.ACCEPTED, result.stdout)
-    else: return (Vertict.RUNTIME_ERROR, result.stdout)
-
-
-def main() -> None:
-    while True:
-        # Claim the oldest queued run, skipping any another worker is claiming right now
-        with Session(engine) as session, session.begin():
-            run = session.scalars(
-                select(JudgeRuns)
-                .where(JudgeRuns.status == JudgeRunStatus.QUEUED)
-                .order_by(JudgeRuns.created_at)
-                .limit(1)
-                .with_for_update(skip_locked=True)
-            ).first()
-            if run is None:
-                run_id = None
-                source = None
-            else:
-                run.status = JudgeRunStatus.RUNNING
-                run_id = run.id
-                source = run.submission.source
-
-        if run_id is None:
-            time.sleep(1)
-            continue
-
-        
-        verdict, result = judge(source, run_id)
-
-        with Session(engine) as session, session.begin():
-            run = session.get(JudgeRuns, run_id)
-            run.status = JudgeRunStatus.DONE
-            run.verdict = verdict
-            run.verdict_meta = {"stdout": result}
-            run.completed_at = func.now()
