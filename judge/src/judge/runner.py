@@ -30,9 +30,8 @@ def _command(
     )
 
 
-def run_cpp(source_file: Path) -> RunResult:
+def run_cpp(source: string) -> RunResult:
     """Compile and execute a C++ source file inside an Isolate sandbox."""
-    source = source_file.read_bytes()
 
     if not source:
         raise ValueError("C++ source is required")
@@ -135,3 +134,55 @@ def run_cpp(source_file: Path) -> RunResult:
                 )
             except (subprocess.TimeoutExpired, OSError):
                 pass
+
+
+import os
+import time
+
+from sqlalchemy import create_engine, func, select
+from sqlalchemy.orm import Session
+
+from judge.queue.models import JudgeRunStatus, JudgeRuns, Verdict
+
+# SQLAlchemy needs the driver in the URL scheme
+engine = create_engine("postgresql+psycopg://" + os.environ["DATABASE_URL"].split("://", 1)[1])
+
+
+def judge(source: str, run_id: int) -> (Verdict, str):
+    result = run_cpp(source)
+    if result.exit_code == 0: return (Verdict.ACCEPTED, result.stdout)
+    else: return (Vertict.RUNTIME_ERROR, result.stdout)
+
+
+def main() -> None:
+    while True:
+        # Claim the oldest queued run, skipping any another worker is claiming right now
+        with Session(engine) as session, session.begin():
+            run = session.scalars(
+                select(JudgeRuns)
+                .where(JudgeRuns.status == JudgeRunStatus.QUEUED)
+                .order_by(JudgeRuns.created_at)
+                .limit(1)
+                .with_for_update(skip_locked=True)
+            ).first()
+            if run is None:
+                run_id = None
+                source = None
+            else:
+                run.status = JudgeRunStatus.RUNNING
+                run_id = run.id
+                source = run.submission.source
+
+        if run_id is None:
+            time.sleep(1)
+            continue
+
+        
+        verdict, result = judge(source, run_id)
+
+        with Session(engine) as session, session.begin():
+            run = session.get(JudgeRuns, run_id)
+            run.status = JudgeRunStatus.DONE
+            run.verdict = verdict
+            run.verdict_meta = {"stdout": result}
+            run.completed_at = func.now()
