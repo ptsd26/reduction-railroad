@@ -1,9 +1,10 @@
 
 services:
   judge:
-    build: .
-    ports:
-      - "8000:8000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: railroad-judge
     privileged: true
     restart: unless-stopped
     init: true

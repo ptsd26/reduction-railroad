@@ -1,10 +1,13 @@
 
-FROM python:3.12-slim-bookworm
+FROM python:3.14-slim-bookworm
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
+
 WORKDIR /app
 
-# Add the official isolate package repository.
+# Install Isolate and the C++ compiler.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates curl g++ binutils \
     && mkdir -p /etc/apt/keyrings \
@@ -17,11 +20,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get install -y --no-install-recommends isolate \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install uv.
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-COPY app.py .
+# Copy the Python project and install its dependencies.
+COPY pyproject.toml uv.lock README.md ./
+COPY src ./src
 
-EXPOSE 8000
+RUN uv sync --frozen
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["uv", "run", "--no-sync", "judge"]
