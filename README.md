@@ -34,13 +34,13 @@ For the GitHub `.env` values, [create an OAuth app](https://docs.github.com/en/a
 
 ## Running locally
 
-From `web/`:
+From the repository root:
 
 ```sh
-npm run db:start            # Runs the Postgres container in the foreground (needs its own terminal)
-npm run db:migrate          # Create/update tables; re-run after schema is changed
-npm run db:load-problems    # Load problem metadata into the DB instance
-npm run dev                 # http://localhost:5173
+docker compose up   # Runs the Postgres DB and judge containers (needs its own terminal)
+
+npm run db:setup    # Migrates the database and loads problem metadata
+npm run dev         # Runs the web app, served at http://localhost:5173
 ```
 
 ## Updating the database schema
