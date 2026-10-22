@@ -36,7 +36,7 @@ def main() -> None:
     engine = create_engine("postgresql+psycopg://" + os.environ["DATABASE_URL"].split("://", 1)[1])
 
     while True:
-        # Claim the oldest queued run, skipping any another worker is claiming right now
+        # Find oldest queued run that's not currently locked by another worker
         with Session(engine) as session, session.begin():
             run = session.scalars(
                 select(JudgeRuns)
@@ -49,6 +49,7 @@ def main() -> None:
                 run_id = None
                 source = None
             else:
+                # Claim the run
                 run.status = JudgeRunStatus.RUNNING
                 run_id = run.id
                 source = run.submission.source
@@ -57,6 +58,7 @@ def main() -> None:
             time.sleep(1)
             continue
 
+        # Try to judge the source file
         assert source is not None
         try:
             verdict, verdict_meta = judge(source, run_id)
@@ -68,6 +70,7 @@ def main() -> None:
         with Session(engine) as session, session.begin():
             run = session.get_one(JudgeRuns, run_id)
 
+            # A run can fail MAX_ATTEMPTS times before we give it the FAILED verdict
             if verdict == Verdict.FAILED:
                 run.judge_attempts += 1
                 if run.judge_attempts >= MAX_ATTEMPTS:
@@ -76,6 +79,7 @@ def main() -> None:
                     run.verdict_meta = verdict_meta
                     run.completed_at = func.now()
                 else:
+                    # Hasn't failed enough times to be counted as failed; retry
                     run.status = JudgeRunStatus.QUEUED
             else:
                 run.status = JudgeRunStatus.DONE

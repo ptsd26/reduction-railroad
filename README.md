@@ -15,8 +15,6 @@ Tools you'll need to get up and running:
 - [node 24](https://nodejs.org/en/download)
 - [Docker](https://docs.docker.com/engine/install/) and [Docker compose](https://docs.docker.com/compose/install/)
 
-Currently Docker compose is used within the web directory, but we'll eventually move that to a root-level compose setup to easily spin up the whole deployment.
-
 ### Setup
 
 ```sh
@@ -39,6 +37,8 @@ From the repository root:
 ```sh
 docker compose up   # Runs the Postgres DB and judge containers (needs its own terminal)
 
+# In a separate shell
+cd web
 npm run db:setup    # Migrates the database and loads problem metadata
 npm run dev         # Runs the web app, served at http://localhost:5173
 ```
