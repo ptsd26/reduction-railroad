@@ -10,7 +10,7 @@ import { db } from '#lib/server/db/index.ts';
 export type SubmitRequest = {
   fromProblem: string;
   toProblem: string;
-  source: string;
+  source: string; //source code
 }
 
 /**

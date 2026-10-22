@@ -1,5 +1,23 @@
 <script>
 	import CodeEditor from '#lib/CodeEditor.svelte';
+  	import { Button } from "#lib/components/ui/button/index.ts";
+
+	let editorRef = $state(); 
+	async function submitCode() {
+		console.log("Pressed submit button");
+		let from = "sat";
+		let to = "clique";
+		let sourceCode = editorRef?.getCode();
+		let result = await fetch("/api/submissions", {
+			method: "POST",
+			body: JSON.stringify({
+				fromProblem: from,
+				toProblem: to,
+				source: sourceCode
+			})
+		});
+		result = await result.json();		
+	}
 </script>
 
 <svelte:head>
@@ -27,9 +45,11 @@
 				<h2 id="editor-heading" class="text-sm font-semibold">main.cpp</h2>
 				<span class="rounded bg-slate-100 px-2 py-1 text-xs text-slate-600">C++ · CodeMirror</span>
 			</div>
-			<CodeEditor />
+			<CodeEditor bind:this={editorRef} />
+			<Button id="submit-button" class="flex px-5" onclick={submitCode}> Submit </Button>
 		</section>
 	</div>
+	
 	<footer class="mt-6 text-sm text-slate-500">
 		SvelteKit + Svelte · Tailwind CSS · CodeMirror (C++) · Svelte Flow installed for future graph work
 	</footer>
