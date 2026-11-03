@@ -15,14 +15,13 @@ Tools you'll need to get up and running:
 - [node 24](https://nodejs.org/en/download)
 - [Docker](https://docs.docker.com/engine/install/) and [Docker compose](https://docs.docker.com/compose/install/)
 
-Currently Docker compose is used within the web directory, but we'll eventually move that to a root-level compose setup to easily spin up the whole deployment.
-
 ### Setup
 
 ```sh
-cd web
 cp .env.example .env
 # Fill in AUTH_SECRET and the GitHub OAuth values in .env (see comments in the file)
+
+cd web
 npm ci
 
 cd ../judge
@@ -33,13 +32,15 @@ For the GitHub `.env` values, [create an OAuth app](https://docs.github.com/en/a
 
 ## Running locally
 
-From `web/`:
+From the repository root:
 
 ```sh
-npm run db:start            # Runs the Postgres container in the foreground (needs its own terminal)
-npm run db:migrate          # Create/update tables; re-run after schema is changed
-npm run db:load-problems    # Load problem metadata into the DB instance
-npm run dev                 # http://localhost:5173
+docker compose up   # Runs the Postgres DB and judge containers (needs its own terminal)
+
+# In a separate shell
+cd web
+npm run db:setup    # Migrates the database and loads problem metadata
+npm run dev         # Runs the web app, served at http://localhost:5173
 ```
 
 ## Updating the database schema

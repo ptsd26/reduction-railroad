@@ -11,13 +11,14 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "eslint .",
-		"db:start": "docker compose up",
+		"db:start": "docker compose up db",
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
-		"db:pymodels": "set -a && . ./.env && set +a && ../judge/scripts/gen_models.sh",
-		"db:load-problems": "set -a && . ./.env && set +a && cd ../judge && uv run python scripts/load_problems.py"
+		"db:pymodels": "set -a && . ../.env && set +a && ../judge/scripts/gen_models.sh",
+		"db:load-problems": "set -a && . ../.env && set +a && cd ../judge && uv run python scripts/load_problems.py",
+		"db:setup": "npm run db:migrate && npm run db:load-problems"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
