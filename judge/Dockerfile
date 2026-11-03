@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && curl -fsSL https://www.ucw.cz/isolate/debian/signing-key.asc \
        -o /etc/apt/keyrings/isolate.asc \
     && printf '%s\n' \
-       'deb [arch=amd64 signed-by=/etc/apt/keyrings/isolate.asc] http://www.ucw.cz/isolate/debian/ bookworm-isolate main' \
+       'deb [signed-by=/etc/apt/keyrings/isolate.asc] http://www.ucw.cz/isolate/debian/ bookworm-isolate main' \
        > /etc/apt/sources.list.d/isolate.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends isolate \
