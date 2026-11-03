@@ -7,7 +7,7 @@ from judge.runner import run_cpp
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import Session
 
-from judge.queue.models import JudgeRunStatus, JudgeRuns, Verdict
+from judge.db.models import JudgeRunStatus, JudgeRuns, Verdict
 
 # Id of this judge worker box
 WORKER_ID = socket.gethostname()
