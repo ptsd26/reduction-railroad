@@ -50,7 +50,7 @@ The database schema is defined in `web/src/lib/server/db/schema.ts`. After it's 
 ```sh
 npm run db:generate         # Generate database migrations
 npm run db:migrate          # Apply migrations to local Postgres instance (must have run db:start)
-npm run db:pymodels         # Regenerate Python models for sqlalchemy (judge/src/judge/queue/models.py)
+npm run db:pymodels         # Regenerate Python models for sqlalchemy (judge/src/judge/db/models.py)
 ```
 
 The updated schema, the newly generated files in `web/drizzle`, and the updated Python models should all be committed together.

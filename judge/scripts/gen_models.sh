@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
-# Regenerates src/judge/queue/models.py from the migrated database schema.
+# Regenerates src/judge/db/models.py from the migrated database schema.
 # Run after applying migrations (`npm run db:migrate` in web/).
 # Uses DATABASE_URL if set, otherwise the local compose DB.
 set -eu
 cd "$(dirname "$0")/.."
 
-out=src/judge/queue/models.py
+out=src/judge/db/models.py
 url="${DATABASE_URL:-postgres://root:mysecretpassword@localhost:5432/local}"
 url="postgresql+psycopg://${url#*://}" # SQLAlchemy needs driver in the URL scheme
 
