@@ -1,13 +1,17 @@
-<script>
+<script lang='ts'>
 	import { onMount } from 'svelte';
 	import { basicSetup, EditorView } from 'codemirror';
 	import { cpp } from '@codemirror/lang-cpp';
 
-	/** @type {HTMLDivElement} */
-	let container;
+	let container: HTMLDivElement;
+	let editor: EditorView;
+
+	export function getCode() {
+		return editor.state.doc.toString();
+	}
 
 	onMount(() => {
-		const editor = new EditorView({
+		editor = new EditorView({
 			parent: container,
 			doc: '#include <iostream>\n\nint main() {\n    std::cout << "Hello, Railroad!\\n";\n    return 0;\n}\n',
 			extensions: [

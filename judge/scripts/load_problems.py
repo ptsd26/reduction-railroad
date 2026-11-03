@@ -23,7 +23,7 @@ from sqlalchemy import create_engine, func, select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
-from judge.queue.models import Problems
+from judge.db.models import Problems
 
 PROBLEMS_DIR = Path(os.environ.get('PROBLEMS_DIR', Path(__file__).resolve().parents[2] / 'problems'))
 DATABASE_URL = "postgresql+psycopg://" + os.environ['DATABASE_URL'].split('://', 1)[1]

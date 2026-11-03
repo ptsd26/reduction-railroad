@@ -134,7 +134,7 @@ export const judgeRuns = pgTable(
 
 		// Verdict and metrics (may be null if the run is not yet complete)
 		verdict: verdict('verdict'),
-		verdictMeta: jsonb('verdict_meta'),
+		verdictMeta: jsonb('verdict_meta').$type<Record<string, unknown>>(),
 		metricMaxOutputSize: integer('metric_max_output_size'),
 		metricMaxRuntimeMs: integer('metric_max_runtime_ms'),
 	},

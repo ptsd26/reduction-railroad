@@ -56,7 +56,7 @@ jobs:
       - run: uv sync --locked
 
       # Make sure the judge module imports cleanly
-      - run: uv run python -c "import judge, judge.queue.models"
+      - run: uv run python -c "import judge, judge.db.models"
 
   models:
     runs-on: ubuntu-latest
@@ -106,7 +106,7 @@ jobs:
       # Make sure the generated pymodels are exactly what is currently versioned
       - name: Check Python sqlalchemy models against migrated DB
         run: |
-          if ! git diff --exit-code -- judge/src/judge/queue/models.py; then
-            echo "::error::Generated Python DB models are not up to date. Run 'npm run db:pymodels' and commit the new 'judge/src/judge/queue/models.py'."
+          if ! git diff --exit-code -- judge/src/judge/db/models.py; then
+            echo "::error::Generated Python DB models are not up to date. Run 'npm run db:pymodels' and commit the new 'judge/src/judge/db/models.py'."
             exit 1
           fi
