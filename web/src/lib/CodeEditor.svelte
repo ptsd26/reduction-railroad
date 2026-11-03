@@ -1,11 +1,10 @@
-<script>
+<script lang='ts'>
 	import { onMount } from 'svelte';
 	import { basicSetup, EditorView } from 'codemirror';
 	import { cpp } from '@codemirror/lang-cpp';
 
-	/** @type {HTMLDivElement} */
-	let container;
-	let editor;
+	let container: HTMLDivElement;
+	let editor: EditorView;
 
 	export function getCode() {
 		return editor.state.doc.toString();
