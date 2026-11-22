@@ -1,4 +1,13 @@
 import type { RequestHandler } from './$types';
-import { notImplemented } from '#lib/server/notImplemented.ts';
+import { json } from '@sveltejs/kit';
 
-export const GET: RequestHandler = () => notImplemented();
+/**
+ * Describes the response from the problems GET endpoint.
+*/
+export type ProblemsResponse = {
+    slugs: string[];
+}
+
+export const GET: RequestHandler = async () => {
+    return json({ slugs : ["sat", "clique"] } satisfies ProblemsResponse, { status: 200});
+};
