@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import {
         SvelteFlow,
     } from '@xyflow/svelte';
@@ -16,8 +16,8 @@
     
     let edges = $state.raw([]);
 
-    let reduce_from = $state(null);
-    let reduce_to = $state(null);
+    let reduce_from: string | null = $state(null);
+    let reduce_to: string | null = $state(null);
 </script>
 
 <svelte:head>
